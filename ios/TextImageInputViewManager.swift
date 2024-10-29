@@ -1,36 +1,109 @@
+import React
+
 @objc(TextImageInputViewManager)
 class TextImageInputViewManager: RCTViewManager {
-
+  static var sharedTextView: TextImageInputView?
+  
   override func view() -> (TextImageInputView) {
-    return TextImageInputView()
+    let view = TextImageInputView()
+    TextImageInputViewManager.sharedTextView = view
+    return view
   }
-
+  
   @objc override static func requiresMainQueueSetup() -> Bool {
     return false
   }
-}
-
-class TextImageInputView : UIView {
-
-  @objc var color: String = "" {
-    didSet {
-      self.backgroundColor = hexStringToUIColor(hexColor: color)
+  
+  @objc func insertImage(_ imageUrl: String) {
+    DispatchQueue.main.async {
+      TextImageInputViewManager.sharedTextView?.insertImage(imageUrl)
     }
   }
+}
 
+class TextImageInputView: UITextView {
+  
+  override init(frame: CGRect, textContainer: NSTextContainer?) {
+    super.init(frame: frame, textContainer: textContainer)
+  }
+  
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+  }
+  
+  @objc var color: String = "" {
+    didSet {
+      self.textColor = hexStringToUIColor(hexColor: color) // 글씨 색상 설정
+    }
+  }
+  
+  @objc var fontSize: NSNumber = 14 {
+    didSet {
+      self.font = UIFont.systemFont(ofSize: CGFloat(truncating: fontSize))
+    }
+  }
+  
   func hexStringToUIColor(hexColor: String) -> UIColor {
     let stringScanner = Scanner(string: hexColor)
-
-    if(hexColor.hasPrefix("#")) {
+    if hexColor.hasPrefix("#") {
       stringScanner.scanLocation = 1
     }
     var color: UInt32 = 0
     stringScanner.scanHexInt32(&color)
-
+    
     let r = CGFloat(Int(color >> 16) & 0x000000FF)
     let g = CGFloat(Int(color >> 8) & 0x000000FF)
     let b = CGFloat(Int(color) & 0x000000FF)
-
+    
     return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: 1)
   }
+  
+  func insertImage(_ url: String) {
+    guard let url = URL(string: url) else { return }
+    
+    let task = URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
+      guard let data = data, let image = UIImage(data: data) else {
+        print("load image failed: \(String(describing: error))")
+        return
+      }
+      self?.insertImage(image)
+    }
+    task.resume()
+  }
+  
+  private func insertImage(_ image: UIImage) {
+    DispatchQueue.main.async {
+      // 현재 커서 위치를 저장
+      let currentCursorLocation = self.selectedRange.location
+      
+      // 현재 텍스트 속성을 유지한 새로운 attributedString 생성
+      let attributedString = NSMutableAttributedString(attributedString: self.attributedText)
+      
+      // NSTextAttachment를 사용하여 이미지 삽입
+      let imageAttachment = NSTextAttachment()
+      imageAttachment.image = image
+      
+      // 이미지 크기 설정 (텍스트 높이에 맞춰 조정 가능)
+      let imageHeight = self.font?.lineHeight ?? 20
+      
+      // 폰트의 capHeight를 사용해 y 위치 조정
+      let yOffset = -(self.font?.capHeight ?? 0) / 2 // capHeight의 절반을 음수로 설정
+      imageAttachment.bounds = CGRect(x: 0, y: yOffset, width: imageHeight, height: imageHeight)
+      
+      // 이미지와 텍스트 속성 유지
+      let imageString = NSAttributedString(attachment: imageAttachment)
+      attributedString.insert(imageString, at: currentCursorLocation)
+      
+      // 현재 폰트 설정을 유지하면서 attributedText 업데이트
+      let fullRange = NSRange(location: 0, length: attributedString.length)
+      attributedString.addAttribute(.font, value: self.font!, range: fullRange)
+      
+      // UITextView에 갱신된 문자열 설정
+      self.attributedText = attributedString
+      
+      // 커서를 이미지 뒤로 이동
+      self.selectedRange = NSRange(location: currentCursorLocation + 1, length: 0)
+    }
+  }
+  
 }
