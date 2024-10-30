@@ -16,7 +16,7 @@ import { TextImageInputView } from "react-native-text-image-input";
 
 // ...
 
-<TextImageInputView color="tomato" />
+<TextImageInputView color="tomato" fontSize={20} />
 ```
 
 
