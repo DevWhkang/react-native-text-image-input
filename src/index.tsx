@@ -1,25 +1,19 @@
-import React, {
+import {
   forwardRef,
   useImperativeHandle,
   useRef,
   useCallback,
+  type Component,
 } from 'react';
 import {
   requireNativeComponent,
-  UIManager,
-  Platform,
   type ViewStyle,
   NativeModules,
   findNodeHandle,
+  type NativeMethods,
 } from 'react-native';
 
 const { TextImageInputViewManager } = NativeModules;
-
-const LINKING_ERROR =
-  `The package 'react-native-text-image-input' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
 
 type TextImageInputProps = {
   color: string;
@@ -29,16 +23,20 @@ type TextImageInputProps = {
 
 const ComponentName = 'TextImageInputView';
 
-const NativeTextImageInputView =
-  UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<TextImageInputProps>(ComponentName)
-    : () => {
-        throw new Error(LINKING_ERROR);
-      };
+const NativeTextImageInputViewComponent =
+  requireNativeComponent<TextImageInputProps>(ComponentName);
 
-const TextImageInputView = forwardRef((props: TextImageInputProps, ref) => {
-  const internalRef =
-    useRef<React.ComponentPropsWithRef<typeof NativeTextImageInputView>>(null);
+export interface TextImageInputViewRef {
+  insertImage: (imageUrl: string) => void;
+}
+
+const TextImageInputView = forwardRef<
+  TextImageInputViewRef,
+  TextImageInputProps
+>((props, ref) => {
+  const internalRef = useRef<Component<TextImageInputProps> & NativeMethods>(
+    null
+  );
 
   const insertImage = useCallback((imageUrl: string) => {
     const node = findNodeHandle(internalRef.current);
@@ -47,7 +45,6 @@ const TextImageInputView = forwardRef((props: TextImageInputProps, ref) => {
     }
   }, []);
 
-  // useImperativeHandle을 통해 외부에서 ref를 사용할 때 insertImage 함수에 접근할 수 있도록 설정
   useImperativeHandle(
     ref,
     () => ({
@@ -56,7 +53,7 @@ const TextImageInputView = forwardRef((props: TextImageInputProps, ref) => {
     [insertImage]
   );
 
-  return <NativeTextImageInputView {...props} ref={internalRef} />;
+  return <NativeTextImageInputViewComponent {...props} ref={internalRef} />;
 });
 
 export default TextImageInputView;
