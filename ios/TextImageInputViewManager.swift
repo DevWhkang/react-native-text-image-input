@@ -2,21 +2,19 @@ import React
 
 @objc(TextImageInputViewManager)
 class TextImageInputViewManager: RCTViewManager {
-  static var sharedTextView: TextImageInputView?
   
   override func view() -> (TextImageInputView) {
-    let view = TextImageInputView()
-    TextImageInputViewManager.sharedTextView = view
-    return view
+    return TextImageInputView()
   }
   
   @objc override static func requiresMainQueueSetup() -> Bool {
     return false
   }
   
-  @objc func insertImage(_ imageUrl: String) {
+  @objc func insertImage(_ node: NSNumber, imageUrl url: String) {
     DispatchQueue.main.async {
-      TextImageInputViewManager.sharedTextView?.insertImage(imageUrl)
+      guard let view = self.bridge.uiManager.view(forReactTag: node) as? TextImageInputView else { return }
+      view.insertImage(url)
     }
   }
 }

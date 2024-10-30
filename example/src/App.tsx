@@ -1,14 +1,22 @@
 import { Button, StyleSheet, View } from 'react-native';
-import TextImageInputView, { insertImage } from 'react-native-text-image-input';
+import TextImageInputView from 'react-native-text-image-input';
+import { useRef } from 'react';
 
 export default function App() {
+  const textImageInputViewRef = useRef(null);
+
   return (
     <View style={styles.container}>
-      <TextImageInputView color={'red'} fontSize={20} style={styles.box} />
+      <TextImageInputView
+        ref={textImageInputViewRef}
+        color={'black'}
+        fontSize={20}
+        style={styles.box}
+      />
       <Button
         title="이미지 삽입"
         onPress={() =>
-          insertImage(
+          textImageInputViewRef.current?.insertImage(
             'https://beta-static.sooplive.com/beta-soop/emoticons/Basic/starkthumb.png'
           )
         }
@@ -27,7 +35,8 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '100%',
-    minHeight: 40,
+    minHeight: 60,
     marginVertical: 20,
+    backgroundColor: 'white',
   },
 });
