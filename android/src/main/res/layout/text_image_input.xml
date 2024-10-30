@@ -3,5 +3,4 @@
           android:id="@+id/textImageInput"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:hint="이미지를 삽입해 보세요"
 />

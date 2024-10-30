@@ -1,9 +1,12 @@
 import { Button, StyleSheet, View } from 'react-native';
-import TextImageInputView from 'react-native-text-image-input';
+import TextImageInputView, {
+  TextImageInputViewRef,
+} from 'react-native-text-image-input';
+
 import { useRef } from 'react';
 
 export default function App() {
-  const textImageInputViewRef = useRef(null);
+  const textImageInputViewRef = useRef<TextImageInputViewRef>(null);
 
   return (
     <View style={styles.container}>
