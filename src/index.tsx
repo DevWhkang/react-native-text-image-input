@@ -28,6 +28,7 @@ const NativeTextImageInputViewComponent =
 
 export interface TextImageInputViewRef {
   insertImage: (imageUrl: string) => void;
+  dismissKeyboard: () => void;
 }
 
 const TextImageInputView = forwardRef<
@@ -45,12 +46,20 @@ const TextImageInputView = forwardRef<
     }
   }, []);
 
+  const dismissKeyboard = useCallback(() => {
+    const node = findNodeHandle(internalRef.current);
+    if (node) {
+      TextImageInputViewManager.dismissKeyboard(node);
+    }
+  }, []);
+
   useImperativeHandle(
     ref,
     () => ({
       insertImage,
+      dismissKeyboard,
     }),
-    [insertImage]
+    [insertImage, dismissKeyboard]
   );
 
   return <NativeTextImageInputViewComponent {...props} ref={internalRef} />;
