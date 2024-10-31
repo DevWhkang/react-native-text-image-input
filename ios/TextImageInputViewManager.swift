@@ -34,13 +34,18 @@ class TextImageInputViewManager: RCTViewManager {
 }
 
 class TextImageInputView: UITextView {
+  @objc var onFocus: RCTDirectEventBlock?
+  @objc var onBlur: RCTDirectEventBlock?
+  @objc var onChange: RCTDirectEventBlock?
 
   override init(frame: CGRect, textContainer: NSTextContainer?) {
     super.init(frame: frame, textContainer: textContainer)
+    self.delegate = self
   }
 
   required init?(coder: NSCoder) {
     super.init(coder: coder)
+    self.delegate = self
   }
 
   @objc var color: String = "" {
@@ -118,4 +123,18 @@ class TextImageInputView: UITextView {
     }
   }
 
+}
+
+extension TextImageInputView: UITextViewDelegate {
+  func textViewDidBeginEditing(_ textView: UITextView) {
+    onFocus?([:])
+  }
+
+  func textViewDidEndEditing(_ textView: UITextView) {
+    onBlur?([:])
+  }
+
+  func textViewDidChange(_ textView: UITextView) {
+    onChange?(["text": textView.text ?? ""])
+  }
 }

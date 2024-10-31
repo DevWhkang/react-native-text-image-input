@@ -16,9 +16,15 @@ import {
 const { TextImageInputViewManager } = NativeModules;
 
 type TextImageInputProps = {
+  // properties
+  style: ViewStyle;
   color: string;
   fontSize: number;
-  style: ViewStyle;
+
+  // callback
+  onFocus?: () => void;
+  onBlur?: () => void;
+  onChange?: (event: { nativeEvent: { text: string } }) => void;
 };
 
 const ComponentName = 'TextImageInputView';
@@ -71,7 +77,15 @@ const TextImageInputView = forwardRef<
     [insertImage, dismissKeyboard, focus]
   );
 
-  return <NativeTextImageInputViewComponent {...props} ref={internalRef} />;
+  return (
+    <NativeTextImageInputViewComponent
+      {...props}
+      ref={internalRef}
+      onFocus={props.onFocus}
+      onBlur={props.onBlur}
+      onChange={props.onChange}
+    />
+  );
 });
 
 export default TextImageInputView;
