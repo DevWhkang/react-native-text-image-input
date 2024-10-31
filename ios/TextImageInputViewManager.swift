@@ -21,22 +21,32 @@ class TextImageInputViewManager: RCTViewManager {
   @objc func dismissKeyboard(_ node: NSNumber) {
     DispatchQueue.main.async {
       guard let view = self.bridge.uiManager.view(forReactTag: node) as? TextImageInputView else { return }
-      view.resignFirstResponder()
+      view.inputView = UIView()
+      view.reloadInputViews()
     }
   }
 
-  @objc func focusTextInput(_ node: NSNumber) {
+  @objc func blur(_ node: NSNumber) {
+    DispatchQueue.main.async {
+      guard let view = self.bridge.uiManager.view(forReactTag: node) as? TextImageInputView else { return }
+      view.endEditing(true)
+    }
+  }
+
+  @objc func focus(_ node: NSNumber) {
     DispatchQueue.main.async {
       guard let view = self.bridge.uiManager.view(forReactTag: node) as? TextImageInputView else { return }
       view.becomeFirstResponder()
+      view.inputView = nil
+      view.reloadInputViews()
     }
   }
 }
 
 class TextImageInputView: UITextView {
-  @objc var onFocus: RCTDirectEventBlock?
-  @objc var onBlur: RCTDirectEventBlock?
-  @objc var onChange: RCTDirectEventBlock?
+  @objc var onFocus: RCTBubblingEventBlock?
+  @objc var onBlur: RCTBubblingEventBlock?
+  @objc var onChange: RCTBubblingEventBlock?
 
   override init(frame: CGRect, textContainer: NSTextContainer?) {
     super.init(frame: frame, textContainer: textContainer)
@@ -54,7 +64,7 @@ class TextImageInputView: UITextView {
     }
   }
 
-  @objc var fontSize: NSNumber = 14 {
+  @objc var fontSize: NSNumber = 16 {
     didSet {
       self.font = UIFont.systemFont(ofSize: CGFloat(truncating: fontSize))
     }
@@ -127,14 +137,14 @@ class TextImageInputView: UITextView {
 
 extension TextImageInputView: UITextViewDelegate {
   func textViewDidBeginEditing(_ textView: UITextView) {
-    onFocus?([:])
+    onFocus?(["target": reactTag as Any])
   }
 
   func textViewDidEndEditing(_ textView: UITextView) {
-    onBlur?([:])
+    onBlur?(["target": reactTag as Any])
   }
 
   func textViewDidChange(_ textView: UITextView) {
-    onChange?(["text": textView.text ?? ""])
+    onChange?(["text": textView.text ?? "", "target": reactTag as Any])
   }
 }

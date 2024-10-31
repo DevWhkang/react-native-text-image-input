@@ -3,10 +3,22 @@ import TextImageInputView, {
   TextImageInputViewRef,
 } from 'react-native-text-image-input';
 
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 export default function App() {
   const textImageInputViewRef = useRef<TextImageInputViewRef>(null);
+
+  const onChange = useCallback((event: { nativeEvent: { text: string } }) => {
+    console.log(event.nativeEvent.text);
+  }, []);
+
+  const onFocus = useCallback(() => {
+    console.log('Focus');
+  }, []);
+
+  const onBlur = useCallback(() => {
+    console.log('Blur');
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -15,6 +27,9 @@ export default function App() {
         color={'black'}
         fontSize={20}
         style={styles.box}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       <Button
         title="이미지 삽입"
@@ -23,6 +38,20 @@ export default function App() {
             'https://beta-static.sooplive.com/beta-soop/emoticons/Basic/starkthumb.png'
           )
         }
+      />
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <Button
+          title="focus"
+          onPress={() => textImageInputViewRef.current?.focus()}
+        />
+        <Button
+          title="blur"
+          onPress={() => textImageInputViewRef.current?.blur()}
+        />
+      </View>
+      <Button
+        title="dismiss keyboard"
+        onPress={() => textImageInputViewRef.current?.dismissKeyboard()}
       />
     </View>
   );

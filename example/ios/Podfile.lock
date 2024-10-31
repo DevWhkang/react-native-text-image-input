@@ -1213,7 +1213,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-text-image-input (0.1.1):
+  - react-native-text-image-input (0.1.11):
     - DoubleConversion
     - glog
     - RCT-Folly (= 2024.01.01.00)
@@ -1753,7 +1753,7 @@ SPEC CHECKSUMS:
   React-logger: d1a89c7d9b3c847eb63eb85724c54b06cae2c939
   React-Mapbuffer: b0b4ace5b62b269f3838df26ba2d8b4f39f90783
   React-microtasksnativemodule: 3bdc6046d4c89b6b2d569fc619f6e0fbca9443ef
-  react-native-text-image-input: 5e63b0e3ce1a13b7c4b621322df87f6a718be036
+  react-native-text-image-input: 081c385b46a4dd1ed1431a8041f573646de38deb
   React-nativeconfig: 72c10ff34863148ef90df9c9c8eacba99d2faaaa
   React-NativeModulesApple: db1123c7760c5003bf48c8317b143971b88bba73
   React-perflogger: 073c7a8a436b3fe724f1df34e9d1f3db1d25fe74

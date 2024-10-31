@@ -36,6 +36,7 @@ export interface TextImageInputViewRef {
   insertImage: (imageUrl: string) => void;
   dismissKeyboard: () => void;
   focus: () => void;
+  blur: () => void;
 }
 
 const TextImageInputView = forwardRef<
@@ -63,7 +64,14 @@ const TextImageInputView = forwardRef<
   const focus = useCallback(() => {
     const node = findNodeHandle(internalRef.current);
     if (node) {
-      TextImageInputViewManager.focusTextInput(node);
+      TextImageInputViewManager.focus(node);
+    }
+  }, []);
+
+  const blur = useCallback(() => {
+    const node = findNodeHandle(internalRef.current);
+    if (node) {
+      TextImageInputViewManager.blur(node);
     }
   }, []);
 
@@ -73,8 +81,9 @@ const TextImageInputView = forwardRef<
       insertImage,
       dismissKeyboard,
       focus,
+      blur,
     }),
-    [insertImage, dismissKeyboard, focus]
+    [insertImage, dismissKeyboard, focus, blur]
   );
 
   return (
