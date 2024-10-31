@@ -24,6 +24,13 @@ class TextImageInputViewManager: RCTViewManager {
       view.resignFirstResponder()
     }
   }
+
+  @objc func focusTextInput(_ node: NSNumber) {
+    DispatchQueue.main.async {
+      guard let view = self.bridge.uiManager.view(forReactTag: node) as? TextImageInputView else { return }
+      view.becomeFirstResponder()
+    }
+  }
 }
 
 class TextImageInputView: UITextView {
