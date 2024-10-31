@@ -1,6 +1,6 @@
 {
   "name": "react-native-text-image-input",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "react native text input with image",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
