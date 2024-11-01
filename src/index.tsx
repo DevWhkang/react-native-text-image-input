@@ -18,9 +18,9 @@ const { TextImageInputViewManager } = NativeModules;
 
 type TextImageInputProps = {
   // properties
-  style: ViewStyle;
-  color: string;
-  fontSize: number;
+  style?: ViewStyle;
+  color?: string;
+  fontSize?: number;
 
   // callback
   onPress?: () => void;
