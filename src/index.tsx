@@ -46,7 +46,7 @@ export interface TextImageInputViewRef {
 const TextImageInputView = forwardRef<
   TextImageInputViewRef,
   TextImageInputProps
->((props, ref) => {
+>(({ containerStyle, onPress, ...props }, ref) => {
   const internalRef = useRef<Component<TextImageInputProps> & NativeMethods>(
     null
   );
@@ -91,17 +91,11 @@ const TextImageInputView = forwardRef<
   );
 
   return (
-    <Pressable
-      style={[styles.container, props.containerStyle]}
-      onPress={props.onPress}
-    >
+    <Pressable style={[styles.container, containerStyle]} onPress={onPress}>
       <NativeTextImageInputViewComponent
         {...props}
         ref={internalRef}
-        style={props.style ?? styles.input}
-        onFocus={props.onFocus}
-        onBlur={props.onBlur}
-        onChange={props.onChange}
+        style={{ ...styles.input, ...props.style }}
       />
     </Pressable>
   );
@@ -113,9 +107,11 @@ const styles = StyleSheet.create({
   container: {
     minHeight: 40,
     width: '100%',
+    backgroundColor: 'white',
   },
   input: {
+    minHeight: 40,
     width: '100%',
-    height: '100%',
+    backgroundColor: 'white',
   },
 });
