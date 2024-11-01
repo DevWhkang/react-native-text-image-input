@@ -12,12 +12,14 @@ import {
   findNodeHandle,
   type NativeMethods,
   Pressable,
+  StyleSheet,
 } from 'react-native';
 
 const { TextImageInputViewManager } = NativeModules;
 
 type TextImageInputProps = {
   // properties
+  containerStyle?: ViewStyle;
   style?: ViewStyle;
   color?: string;
   fontSize?: number;
@@ -89,7 +91,10 @@ const TextImageInputView = forwardRef<
   );
 
   return (
-    <Pressable onPress={props.onPress}>
+    <Pressable
+      style={[styles.container, props.containerStyle]}
+      onPress={props.onPress}
+    >
       <NativeTextImageInputViewComponent
         {...props}
         ref={internalRef}
@@ -102,3 +107,10 @@ const TextImageInputView = forwardRef<
 });
 
 export default TextImageInputView;
+
+const styles = StyleSheet.create({
+  container: {
+    minHeight: 40,
+    width: '100%',
+  },
+});
