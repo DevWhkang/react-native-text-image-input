@@ -98,6 +98,7 @@ const TextImageInputView = forwardRef<
       <NativeTextImageInputViewComponent
         {...props}
         ref={internalRef}
+        style={props.style ?? styles.input}
         onFocus={props.onFocus}
         onBlur={props.onBlur}
         onChange={props.onChange}
@@ -112,5 +113,9 @@ const styles = StyleSheet.create({
   container: {
     minHeight: 40,
     width: '100%',
+  },
+  input: {
+    width: '100%',
+    height: '100%',
   },
 });
