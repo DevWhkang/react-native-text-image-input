@@ -73,10 +73,10 @@ class TextImageInputView: UITextView {
   func hexStringToUIColor(hexColor: String) -> UIColor {
     let stringScanner = Scanner(string: hexColor)
     if hexColor.hasPrefix("#") {
-      stringScanner.scanLocation = 1
+        stringScanner.currentIndex = hexColor.index(after: hexColor.startIndex)
     }
-    var color: UInt32 = 0
-    stringScanner.scanHexInt32(&color)
+    var color: UInt64 = 0
+    stringScanner.scanHexInt64(&color)
 
     let r = CGFloat(Int(color >> 16) & 0x000000FF)
     let g = CGFloat(Int(color >> 8) & 0x000000FF)
