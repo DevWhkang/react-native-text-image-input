@@ -50,6 +50,10 @@ export default function App() {
         />
       </View>
       <Button
+        title="present keyboard"
+        onPress={() => textImageInputViewRef.current?.presentKeyboard()}
+      />
+      <Button
         title="dismiss keyboard"
         onPress={() => textImageInputViewRef.current?.dismissKeyboard()}
       />
@@ -61,12 +65,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 150,
     backgroundColor: 'green',
     paddingHorizontal: 60,
   },
   box: {
-    width: '100%',
+    width: 200,
     minHeight: 60,
     marginVertical: 20,
     backgroundColor: 'white',

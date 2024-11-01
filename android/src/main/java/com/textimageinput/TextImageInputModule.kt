@@ -27,19 +27,20 @@ import androidx.annotation.RequiresApi
 import com.facebook.react.uimanager.UIManagerModule
 import java.net.URL
 
-class TextImageInputModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class TextImageInputModule(private val reactContext: ReactApplicationContext) :
+  ReactContextBaseJavaModule(reactContext) {
   override fun getName() = "TextImageInputViewManager"
 
   @ReactMethod
   fun focus(node: Int) {
-      val editText = getView(node)
-      editText?.let {
-          reactContext.runOnUiQueueThread {
-              it.requestFocus()
-              val imm = reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-              imm.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
-          }
+    val editText = getView(node)
+    editText?.let {
+      reactContext.runOnUiQueueThread {
+        it.requestFocus()
+        val imm = reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
       }
+    }
   }
 
   @ReactMethod
@@ -49,11 +50,25 @@ class TextImageInputModule(private val reactContext: ReactApplicationContext) : 
       reactContext.runOnUiQueueThread {
         val imm = reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(it.windowToken, 0)
-
         it.clearFocus()
       }
     }
   }
+
+  @ReactMethod
+  fun presentKeyboard(node: Int) {
+    val editText = getView(node)
+    editText?.let {
+      reactContext.runOnUiQueueThread {
+        if (it.hasFocus()) {
+          val imm =
+            reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+          imm.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
+        }
+      }
+    }
+  }
+
 
   @ReactMethod
   fun dismissKeyboard(node: Int) {
@@ -70,7 +85,9 @@ class TextImageInputModule(private val reactContext: ReactApplicationContext) : 
   @ReactMethod
   fun insertImage(node: Int, imageUrl: String) {
     // val context = currentActivity ?: return
-    val editText = reactContext.getNativeModule(UIManagerModule::class.java)?.resolveView(node) as? EditText ?: return
+    val editText =
+      reactContext.getNativeModule(UIManagerModule::class.java)?.resolveView(node) as? EditText
+        ?: return
 
     CoroutineScope(Dispatchers.IO).launch {
       try {
