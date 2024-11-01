@@ -61,8 +61,7 @@ class TextImageInputModule(private val reactContext: ReactApplicationContext) :
     editText?.let {
       reactContext.runOnUiQueueThread {
         if (it.hasFocus()) {
-          val imm =
-            reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+          val imm = reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
           imm.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
         }
       }
@@ -77,6 +76,21 @@ class TextImageInputModule(private val reactContext: ReactApplicationContext) :
       reactContext.runOnUiQueueThread {
         val imm = reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(it.windowToken, 0)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun focusWithoutKeyboard(node: Int) {
+    val editText = getView(node)
+    editText?.let {
+      reactContext.runOnUiQueueThread {
+        if (!it.hasFocus()) {
+          it.requestFocus()
+
+          val imm = reactContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+          imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
       }
     }
   }

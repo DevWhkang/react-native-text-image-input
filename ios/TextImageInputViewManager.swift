@@ -49,6 +49,18 @@ class TextImageInputViewManager: RCTViewManager {
       view.reloadInputViews()
     }
   }
+
+  @objc func focusWithoutKeyboard(_ node: NSNumber) {
+      DispatchQueue.main.async {
+          guard let view = self.bridge.uiManager.view(forReactTag: node) as? TextImageInputView else { return }
+
+          if !view.isFirstResponder {
+              view.inputView = UIView()
+              view.reloadInputViews()
+              view.becomeFirstResponder()
+          }
+      }
+  }
 }
 
 class TextImageInputView: UITextView {

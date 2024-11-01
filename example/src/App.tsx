@@ -49,14 +49,20 @@ export default function App() {
           onPress={() => textImageInputViewRef.current?.blur()}
         />
       </View>
-      <Button
-        title="present keyboard"
-        onPress={() => textImageInputViewRef.current?.presentKeyboard()}
-      />
-      <Button
-        title="dismiss keyboard"
-        onPress={() => textImageInputViewRef.current?.dismissKeyboard()}
-      />
+      <View style={{ gap: 8 }}>
+        <Button
+          title="focus without keyboard"
+          onPress={() => textImageInputViewRef.current?.focusWithoutKeyboard()}
+        />
+        <Button
+          title="present keyboard"
+          onPress={() => textImageInputViewRef.current?.presentKeyboard()}
+        />
+        <Button
+          title="dismiss keyboard"
+          onPress={() => textImageInputViewRef.current?.dismissKeyboard()}
+        />
+      </View>
     </View>
   );
 }
