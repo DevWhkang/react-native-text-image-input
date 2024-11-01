@@ -11,6 +11,7 @@ import {
   NativeModules,
   findNodeHandle,
   type NativeMethods,
+  Pressable,
 } from 'react-native';
 
 const { TextImageInputViewManager } = NativeModules;
@@ -22,6 +23,7 @@ type TextImageInputProps = {
   fontSize: number;
 
   // callback
+  onPress?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
   onChange?: (event: { nativeEvent: { text: string } }) => void;
@@ -87,13 +89,15 @@ const TextImageInputView = forwardRef<
   );
 
   return (
-    <NativeTextImageInputViewComponent
-      {...props}
-      ref={internalRef}
-      onFocus={props.onFocus}
-      onBlur={props.onBlur}
-      onChange={props.onChange}
-    />
+    <Pressable onPress={props.onPress}>
+      <NativeTextImageInputViewComponent
+        {...props}
+        ref={internalRef}
+        onFocus={props.onFocus}
+        onBlur={props.onBlur}
+        onChange={props.onChange}
+      />
+    </Pressable>
   );
 });
 
