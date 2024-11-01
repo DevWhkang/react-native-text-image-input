@@ -26,6 +26,14 @@ class TextImageInputViewManager: RCTViewManager {
     }
   }
 
+  @objc func presentKeyboard(_ node: NSNumber) {
+    DispatchQueue.main.async {
+      guard let view = self.bridge.uiManager.view(forReactTag: node) as? TextImageInputView else { return }
+      view.inputView = nil
+      view.reloadInputViews()
+    }
+  }
+
   @objc func blur(_ node: NSNumber) {
     DispatchQueue.main.async {
       guard let view = self.bridge.uiManager.view(forReactTag: node) as? TextImageInputView else { return }
