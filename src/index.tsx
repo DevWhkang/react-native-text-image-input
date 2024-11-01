@@ -104,14 +104,6 @@ const TextImageInputView = forwardRef<
 export default TextImageInputView;
 
 const styles = StyleSheet.create({
-  container: {
-    minHeight: 40,
-    width: '100%',
-    backgroundColor: 'white',
-  },
-  input: {
-    minHeight: 40,
-    width: '100%',
-    backgroundColor: 'white',
-  },
+  container: {},
+  input: {},
 });
